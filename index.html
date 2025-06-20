@@ -1,10 +1,191 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>lindo.ai API Docs</title>
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <title>Lindo Structured API Documentation</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      body { 
+        margin: 0; 
+        padding: 0; 
+        background: #0f172a;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      }
+    </style>
   </head>
   <body>
-    <redoc spec-url="openapi.json"></redoc>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+    <script>
+      const darkTheme = {
+        colors: {
+          primary: {
+            main: "#60a5fa"
+          },
+          success: {
+            main: "#34d399"
+          },
+          warning: {
+            main: "#fbbf24"
+          },
+          error: {
+            main: "#f87171"
+          },
+          text: {
+            primary: "#f8fafc",
+            secondary: "#e2e8f0"
+          },
+          border: {
+            dark: "#475569",
+            light: "#64748b"
+          },
+          responses: {
+            success: {
+              color: "#34d399",
+              backgroundColor: "#064e3b"
+            },
+            error: {
+              color: "#f87171",
+              backgroundColor: "#7f1d1d"
+            },
+            redirect: {
+              color: "#fbbf24",
+              backgroundColor: "#78350f"
+            },
+            info: {
+              color: "#60a5fa",
+              backgroundColor: "#1e3a8a"
+            }
+          }
+        },
+        schema: {
+          linesColor: "#64748b",
+          defaultDetailsWidth: "75%",
+          typeNameColor: "#60a5fa",
+          typeTitleColor: "#f8fafc",
+          requireLabelColor: "#f87171",
+          labelsTextSize: "0.9em",
+          nestingSpacing: "1em",
+          nestedBackground: "#1e293b",
+          arrow: {
+            size: "1.1em",
+            color: "#94a3b8"
+          }
+        },
+        typography: {
+          fontSize: "14px",
+          lineHeight: "1.6em",
+          fontFamily: "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+          smoothing: "antialiased",
+          optimizeSpeed: true,
+          headings: {
+            fontFamily: "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
+            fontWeight: "600",
+            lineHeight: "1.4em",
+            color: "#f8fafc"
+          },
+          code: {
+            fontSize: "13px",
+            fontFamily: "JetBrains Mono, Menlo, Monaco, Consolas, monospace",
+            lineHeight: "1.5em",
+            fontWeight: "400",
+            color: "#f1f5f9",
+            backgroundColor: "#1e293b",
+            wrap: true
+          },
+          links: {
+            color: "#60a5fa",
+            visited: "#a78bfa",
+            hover: "#93c5fd"
+          }
+        },
+        sidebar: {
+          backgroundColor: "#0f172a",
+          textColor: "#f1f5f9",
+          activeTextColor: "#60a5fa",
+          groupItems: {
+            activeBackgroundColor: "#1e293b",
+            activeTextColor: "#60a5fa",
+            textTransform: "none"
+          },
+          level1Items: {
+            activeBackgroundColor: "#1e293b",
+            activeTextColor: "#60a5fa",
+            textTransform: "none"
+          },
+          arrow: {
+            size: "1.2em",
+            color: "#94a3b8"
+          }
+        },
+        rightPanel: {
+          backgroundColor: "#1e293b",
+          width: "40%",
+          textColor: "#f1f5f9",
+          servers: {
+            overlay: {
+              backgroundColor: "#334155",
+              textColor: "#f1f5f9"
+            },
+            url: {
+              backgroundColor: "#475569"
+            }
+          }
+        },
+        codeBlock: {
+          backgroundColor: "#1e293b",
+          tokens: {
+            keyword: "#c792ea",
+            "attr-name": "#ffcb6b",
+            "attr-value": "#c3e88d",
+            punctuation: "#89ddff",
+            operator: "#89ddff",
+            string: "#c3e88d",
+            number: "#f78c6c",
+            boolean: "#ff5370",
+            null: "#ff5370",
+            comment: "#546e7a"
+          }
+        },
+        fab: {
+          backgroundColor: "#60a5fa",
+          color: "#0f172a"
+        }
+      };
+
+      // Load spec from the server if available
+      fetch('openapi.json')
+        .then(response => response.json())
+        .then(spec => {
+          Redoc.init(spec, {
+            theme: darkTheme,
+            scrollYOffset: 0,
+            hideDownloadButton: false,
+            disableSearch: false,
+            expandResponses: "200,201",
+            jsonSampleExpandLevel: 2,
+            hideSingleRequestSampleTab: true,
+            menuToggle: true,
+            nativeScrollbars: false,
+            pathInMiddlePanel: false,
+            requiredPropsFirst: true,
+            sortPropsAlphabetically: false,
+            showExtensions: true,
+            sideNavStyle: "summary-only"
+          }, document.getElementById('redoc-container'));
+        })
+        .catch(error => {
+          document.getElementById('redoc-container').innerHTML = `
+            <div style="padding: 40px; text-align: center; font-family: 'Inter', system-ui; background: #0f172a; color: #f8fafc; min-height: 100vh;">
+              <h2 style="color: #f87171; margin-bottom: 20px;">⚠️ Cannot load API specification</h2>
+              <p style="color: #e2e8f0; margin-bottom: 30px;">Please start the documentation server first:</p>
+              <pre style="background: #1e293b; color: #f1f5f9; padding: 20px; border-radius: 8px; display: inline-block; font-family: 'JetBrains Mono', monospace;">yarn docs</pre>
+              <p style="color: #e2e8f0; margin: 30px 0;">Then visit: <a href="http://localhost:3002/redoc" style="color: #60a5fa;">http://localhost:3002/redoc</a></p>
+              <p style="color: #94a3b8; font-size: 14px;"><small>Error: ${error.message}</small></p>
+            </div>
+          `;
+        });
+    </script>
   </body>
 </html>
