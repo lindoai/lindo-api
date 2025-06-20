@@ -1,0 +1,740 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "lindo.ai OpenAPI",
+    "description": "OpenAPI specification for lindo.ai endpoints",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.lindoai.com",
+      "description": "Production server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "LindoAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Lindo API key authentication"
+      }
+    },
+    "schemas": {
+      "ApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "errors"
+        ]
+      },
+      "InviteAgencyClient": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "website_limit": {
+            "type": "string"
+          },
+          "send_invitation": {
+            "type": "boolean"
+          },
+          "payment_rate_fee": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "domain",
+          "website_limit",
+          "send_invitation",
+          "payment_rate_fee"
+        ]
+      },
+      "ClientCreateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "client_id"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "result"
+        ]
+      },
+      "EmptyRequest": {
+        "type": "object",
+        "properties": {}
+      },
+      "any[]": {
+        "type": "object"
+      },
+      "UpdateAgencyClient": {
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "website_limit": {
+            "type": "string"
+          },
+          "payment_rate_fee": {
+            "type": "number"
+          },
+          "suspended": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "client_id",
+          "website_limit",
+          "payment_rate_fee",
+          "suspended"
+        ]
+      },
+      "any": {
+        "type": "object"
+      },
+      "RevokeClientRequest": {
+        "type": "object",
+        "properties": {
+          "invitation_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "invitation_id"
+        ]
+      },
+      "ClientDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "revoked": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "revoked"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "result"
+        ]
+      },
+      "UpdateWebsiteInfo": {
+        "type": "object",
+        "properties": {
+          "business_name": {
+            "type": "string"
+          },
+          "business_description": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "is_website_setup": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "business_name",
+          "business_description",
+          "language",
+          "is_website_setup"
+        ]
+      },
+      "DeleteWebsite": {
+        "type": "object",
+        "properties": {
+          "website_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "website_id"
+        ]
+      },
+      "WebsiteDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "website_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message",
+              "website_id"
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "result"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "LindoAuth": []
+    }
+  ],
+  "paths": {
+    "/workspace/client/create": {
+      "post": {
+        "tags": [
+          "Client Management"
+        ],
+        "summary": "Create new workspace client",
+        "description": "Creates a new client for a workspace with specified email and permissions",
+        "operationId": "postworkspaceclientcreate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteAgencyClient"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/client/list": {
+      "get": {
+        "tags": [
+          "Client Management"
+        ],
+        "summary": "List all workspace clients",
+        "description": "Retrieves a list of all clients associated with the current workspace",
+        "operationId": "getworkspaceclientlist",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/any[]"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/client/update": {
+      "put": {
+        "tags": [
+          "Client Management"
+        ],
+        "summary": "Update workspace client",
+        "description": "Updates an existing client's information including website limits and payment rates",
+        "operationId": "putworkspaceclientupdate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAgencyClient"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/any"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/client/delete": {
+      "delete": {
+        "tags": [
+          "Client Management"
+        ],
+        "summary": "Delete workspace client",
+        "description": "Removes a client from the workspace and revokes their access",
+        "operationId": "deleteworkspaceclientdelete",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeClientRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/website/list": {
+      "get": {
+        "tags": [
+          "Website Management"
+        ],
+        "summary": "List all workspace websites",
+        "description": "Retrieves a list of all websites associated with the current workspace",
+        "operationId": "getworkspacewebsitelist",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/any[]"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/website/update": {
+      "put": {
+        "tags": [
+          "Website Management"
+        ],
+        "summary": "Update website information",
+        "description": "Updates website details such as business name, description, and setup status",
+        "operationId": "putworkspacewebsiteupdate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWebsiteInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/any"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/workspace/website/delete": {
+      "delete": {
+        "tags": [
+          "Website Management"
+        ],
+        "summary": "Delete website",
+        "description": "Permanently deletes a website and all associated data",
+        "operationId": "deleteworkspacewebsitedelete",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteWebsite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteDeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  }
+}
